@@ -34,6 +34,8 @@
 #include <utility>
 #include <vector>
 
+typedef CWallet* CWalletRef;
+
 //! Responsible for reading and validating the -wallet arguments and verifying the wallet database.
 //! This function will perform salvage on the wallet if requested, as long as only one wallet is
 //! being loaded (WalletParameterInteraction forbids -salvagewallet, -zapwallettxes or -upgradewallet with multiwallet).

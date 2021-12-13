@@ -6,8 +6,11 @@
 #ifndef BITCOIN_UTIL_TIME_H
 #define BITCOIN_UTIL_TIME_H
 
+#include <chrono>
 #include <stdint.h>
 #include <string>
+
+void UninterruptibleSleep(const std::chrono::microseconds& n);
 
 /**
  * GetTimeMicros() and GetTimeMillis() both return the system time, but in

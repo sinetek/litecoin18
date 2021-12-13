@@ -502,4 +502,9 @@ inline bool IsBlockPruned(const CBlockIndex* pblockindex)
     return (fHavePruned && !(pblockindex->nStatus & BLOCK_HAVE_DATA) && pblockindex->nTx > 0);
 }
 
+/** Abort with a message */
+bool DoAbortNode(const std::string& strMessage, const std::string& userMessage="");
+/** Sends out an alert */
+void DoWarning(const std::string& strWarning);
+
 #endif // BITCOIN_VALIDATION_H

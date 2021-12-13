@@ -1532,6 +1532,11 @@ static bool AbortNode(CValidationState& state, const std::string& strMessage, co
 
 } // namespace
 
+bool DoAbortNode(const std::string& strMessage, const std::string& userMessage)
+{
+    AbortNode(strMessage, userMessage);
+}
+
 /**
  * Restore the UTXO in a Coin at a given COutPoint
  * @param undo The Coin to be restored.
@@ -2192,7 +2197,7 @@ void PruneAndFlush() {
     }
 }
 
-static void DoWarning(const std::string& strWarning)
+void DoWarning(const std::string& strWarning)
 {
     static bool fWarned = false;
     SetMiscWarning(strWarning);

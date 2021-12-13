@@ -1195,7 +1195,7 @@ static UniValue ListReceived(interfaces::Chain::Lock& locked_chain, CWallet * co
     return ret;
 }
 
-static UniValue listreceivedbyaddress(const JSONRPCRequest& request)
+UniValue listreceivedbyaddress(const JSONRPCRequest& request)
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     CWallet* const pwallet = wallet.get();

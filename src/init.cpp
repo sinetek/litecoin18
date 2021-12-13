@@ -123,6 +123,13 @@ NODISCARD static bool CreatePidFile()
     }
 }
 
+/**
+ * The tradelayer registry facilities.
+ */
+extern int mastercore_init();
+extern int mastercore_shutdown();
+extern int CheckWalletUpdate(bool forceUpdate = false);
+
 //////////////////////////////////////////////////////////////////////////////
 //
 // Shutdown
@@ -283,6 +290,11 @@ void Shutdown(InitInterfaces& interfaces)
         client->stop();
     }
 
+    /**
+     * Tradelayer shutdown.
+     */
+    mastercore_shutdown();
+
 #if ENABLE_ZMQ
     if (g_zmq_notification_interface) {
         UnregisterValidationInterface(g_zmq_notification_interface);
@@ -321,6 +333,7 @@ static void HandleSIGTERM(int)
 static void HandleSIGHUP(int)
 {
     LogInstance().m_reopen_file = true;
+    fReopenTradeLayerLog = true;
 }
 #else
 static BOOL WINAPI consoleCtrlHandler(DWORD dwCtrlType)
@@ -1647,6 +1660,36 @@ bool AppInitMain(InitInterfaces& interfaces)
         ::feeEstimator.Read(est_filein);
     fFeeEstimatesInitialized = true;
 
+    // ********************************************************* Step 7.5: load tradelayer
+
+    /**
+     * Development note !! !!:
+     * fTxIndex => ????
+     *
+     * I think I can use the variable `DEFAULT_TXINDEX'.
+     */
+
+    bool fTxIndex = false;
+    if (fTxIndex) {
+        // ask the user if they would like us to modify their config file for them
+        std::string msg = _("Disabled transaction index detected.\n\n"
+                            "Trade Layer requires an enabled transaction index. To enable "
+                            "transaction indexing, please use the \"-txindex\" option \n"
+                            "as command line argument or add \"txindex=1\" to your client "
+                            "configuration file within your data directory, and restart the node.\n\n"
+                            "Configuration file"); // allow translation of main text body while still allowing differing config file string
+        msg += ": " + GetConfigFile(gArgs.GetArg("-conf", BITCOIN_CONF_FILENAME)).string() + "\n\n";
+
+        uiInterface.ThreadSafeMessageBox(msg,"", CClientUIInterface::MSG_ERROR | CClientUIInterface::BTN_ABORT);
+
+        return false;
+
+    }
+
+    uiInterface.InitMessage(_("Parsing Trade Layer transactions..."));
+
+    mastercore_init();
+
     // ********************************************************* Step 8: start indexers
     if (gArgs.GetBoolArg("-txindex", DEFAULT_TXINDEX)) {
         g_txindex = MakeUnique<TxIndex>(nTxIndexCache, false, fReindex);
@@ -1659,6 +1702,11 @@ bool AppInitMain(InitInterfaces& interfaces)
             return false;
         }
     }
+
+    /**
+     * Tradelayer is loaded, populate.
+     */
+    CheckWalletUpdate();
 
     // ********************************************************* Step 10: data directory maintenance
 
