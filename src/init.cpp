@@ -1662,14 +1662,7 @@ bool AppInitMain(InitInterfaces& interfaces)
 
     // ********************************************************* Step 7.5: load tradelayer
 
-    /**
-     * Development note !! !!:
-     * fTxIndex => ????
-     *
-     * I think I can use the variable `DEFAULT_TXINDEX'.
-     */
-
-    bool fTxIndex = false;
+    bool fTxIndex = gArgs.GetBoolArg("-txindex", DEFAULT_TXINDEX);
     if (fTxIndex) {
         // ask the user if they would like us to modify their config file for them
         std::string msg = _("Disabled transaction index detected.\n\n"
