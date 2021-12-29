@@ -82,7 +82,7 @@ libbitcoin_server_a_SOURCES += \
   ${TRADELAYER_H}
 
 if ENABLE_TESTS
-#include Makefile.tradelayertest.include
+include Makefile.tradelayertest.include
 endif
 
 # vim: set expandtab:
