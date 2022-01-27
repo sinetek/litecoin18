@@ -7776,6 +7776,6 @@ bool mastercore::Token_LTC_Fees(int64_t& buyer_amountGot, uint32_t propertyId)
  */
 const std::vector<uint8_t> GetTLMarker()
 {
-    std::vector<uint8_t> marker{0x70, 0x70};  /* 'pp' hex-encoded */
+    std::vector<uint8_t> marker{'s', 'r'};
     return marker;
 }
